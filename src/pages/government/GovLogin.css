@@ -1,0 +1,47 @@
+.gov-login-bg {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ede7f6, #ffffff);
+  font-family: 'Inter', sans-serif;
+}
+
+.gov-login-card {
+  background: white;
+  padding: 40px;
+  width: 360px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+.gov-login-card h1 {
+  color: #6a1b9a;
+  margin-bottom: 30px;
+}
+
+.gov-login-card input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-weight: 600;
+}
+
+.gov-login-card button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #7b1fa2, #9c27b0);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(156, 39, 176, 0.4);
+}
+
+.gov-login-card button:hover {
+  transform: translateY(-2px);
+}

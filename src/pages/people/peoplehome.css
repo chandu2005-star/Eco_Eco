@@ -1,0 +1,28 @@
+.peoplehome-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffebee, #ffffff);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.peoplehome-bg h1 {
+  color: #b71c1c;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.buttons button {
+  padding: 14px 26px;
+  border: none;
+  border-radius: 30px;
+  background: #c62828;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
