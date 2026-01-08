@@ -1,17 +1,28 @@
+# backend/factories_data.py
+
 factories = {
     "F001": {
         "name": "GreenTech Industries",
-        "monthly_emission": 120,
-        "allowed_limit": 150
+        "emissions": {
+            "2026-01": 120,
+            "2026-02": 135
+        },
+        "allowed_limit": None
     },
     "F002": {
         "name": "Skyline Chemicals",
-        "monthly_emission": 180,
-        "allowed_limit": 160
+        "emissions": {
+            "2026-01": 180,
+            "2026-02": 165
+        },
+        "allowed_limit": None
     },
     "F003": {
         "name": "Oceanic Power",
-        "monthly_emission": 90,
-        "allowed_limit": 130
+        "emissions": {
+            "2026-01": 90,
+            "2026-02": 110
+        },
+        "allowed_limit": None
     }
 }
