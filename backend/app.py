@@ -1,11 +1,8 @@
-# backend/app.py
-
 from flask import Flask, jsonify
 from flask_cors import CORS
 from factories_data import factories
-from emissions_logic import calculate_allowed_limit
+from emissions_logic import calculate_allowed_limit, get_aqi_from_api
 from auth_routes import auth
-import random
 
 app = Flask(__name__)
 CORS(app)
@@ -17,20 +14,20 @@ def home():
 
 @app.route("/monthly-report", methods=["GET"])
 def monthly_report():
-    aqi = random.randint(50, 150)  # mock AQI
+    city = "Delhi"
+    aqi = get_aqi_from_api(city)
 
     report = {}
 
     for fid, data in factories.items():
         base_limit = data["base_limit"]
 
-        # ✅ FINAL CALCULATION
+        # FINAL CALCULATION
         final_allowed_limit = calculate_allowed_limit(base_limit, aqi)
 
-        # ✅ STORE RESULT BACK INTO FACTORY DATABASE
+        # STORE BACK INTO DATABASE
         data["allowed_limit"] = final_allowed_limit
 
-        # latest month emission (last key)
         latest_month = list(data["emissions"].keys())[-1]
         latest_emission = data["emissions"][latest_month]
 
@@ -43,6 +40,7 @@ def monthly_report():
         }
 
     return jsonify({
+        "city": city,
         "aqi": aqi,
         "factories": report
     })
