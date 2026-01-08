@@ -1,0 +1,68 @@
+/* SAME GRADIENT BG */
+.page-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #95ed9d 0%,
+    #ffffff 40%,
+    #fff3e0 70%,
+    #e7bc7d 100%
+  );
+}
+
+/* FACTORY CARD (UNIQUE – NO OVERRIDE) */
+.factory-card {
+  width: 100%;
+  max-width: 560px;        /* ✅ NOW IT WILL CHANGE */
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* TITLE */
+.factory-card h2 {
+  color: #2e7d32;
+  margin-bottom: 25px;
+}
+
+/* FORM */
+.factory-card input,
+.factory-card select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTON */
+.factory-card button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.factory-card button:hover {
+  opacity: 0.9;
+}
+
+/* BACK */
+.back {
+  margin-top: 15px;
+  background: none;
+  border: none;
+  color: #2e7d32;
+  font-weight: bold;
+  cursor: pointer;
+}

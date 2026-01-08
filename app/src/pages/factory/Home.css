@@ -1,0 +1,65 @@
+/* Full page gradient background */
+.home-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(
+    135deg,
+    #9df3a4 0%,
+    #ffffff 40%,
+    #fff3e0 70%,
+    #e4ac59 100%
+  );
+}
+
+/* Main card */
+.home {
+  max-width: 620px;
+  padding: 45px;
+  background: white;
+  text-align: center;
+  border-radius: 16px;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Heading */
+.home h1 {
+  color: #2e7d32;
+  margin-bottom: 12px;
+}
+
+/* Subtitle */
+.home p {
+  color: #555;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+/* Buttons */
+.home a {
+  display: inline-block;
+  margin: 10px;
+  padding: 12px 26px;
+
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: bold;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect */
+.home a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+}
+
+/* Secondary button (login) */
+.home a.login {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+}

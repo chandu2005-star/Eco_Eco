@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* BACKGROUND */
+.people-home-bg {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ffebee, #ffffff);
+}
+
+/* CARD */
+.people-home-card {
+  background: white;
+  padding: 40px;
+  width: 380px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* TITLE */
+.people-home-card h1 {
+  color: #b71c1c;
+  margin-bottom: 10px;
+}
+
+/* TEXT */
+.people-home-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+.people-home-card button {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+}
+
+/* LOGIN */
+.login-btn {
+  background: linear-gradient(135deg, #c62828, #ef5350);
+}
+
+.login-btn:hover {
+  background: #b71c1c;
+}
+
+/* REGISTER */
+.register-btn {
+  background: linear-gradient(135deg, #d32f2f, #ff7043);
+}
+
+.register-btn:hover {
+  background: #c62828;
+}

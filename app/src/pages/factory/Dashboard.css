@@ -1,0 +1,25 @@
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  font-weight: 600;
+  text-align: center;
+}
+
+.card b {
+  display: block;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.air { background: #e3f2fd; }
+.water { background: #e0f7fa; }
+.status { background: #e8f5e9; }
+.fine { background: #ffebee; }

@@ -1,0 +1,159 @@
+.gov-page {
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f8f6;
+  min-height: 100vh;
+}
+
+/* NAVBAR */
+.gov-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.gov-navbar .logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1b5e20;
+}
+
+.gov-navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.gov-navbar li {
+  cursor: pointer;
+  color: #333;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background: #6a1b9a;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* HERO */
+.gov-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 80px;
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+}
+
+.hero-text {
+  max-width: 550px;
+}
+
+.hero-text h1 {
+  font-size: 36px;
+  color: #1b5e20;
+}
+
+.hero-text p {
+  margin: 15px 0 25px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.hero-buttons button {
+  padding: 12px 22px;
+  border-radius: 25px;
+  border: none;
+  margin-right: 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary-btn {
+  background: #6a1b9a;
+  color: white;
+}
+
+.secondary-btn {
+  background: #1b5e20;
+  color: white;
+}
+
+.hero-image img {
+  width: 420px;
+  display: block;
+}
+
+/* FEATURES */
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  padding: 40px 80px;
+}
+
+.feature-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 36px;
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+.feature-card h3 {
+  margin: 10px 0;
+  color: #1b5e20;
+}
+
+.feature-card p {
+  color: #555;
+  font-size: 14px;
+}
+
+.feature-card button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: none;
+  background: #1b5e20;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* OVERVIEW */
+.overview {
+  padding: 40px 80px;
+}
+
+.overview h2 {
+  color: #1b5e20;
+}
+
+.overview-card {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.overview-icon {
+  font-size: 40px;
+  color: #1b5e20;
+}
+
+

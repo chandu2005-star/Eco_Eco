@@ -1,0 +1,162 @@
+.factory-details-page {
+  padding: 30px 50px;
+  background: #f4f8f6;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  color: #777;
+  margin-bottom: 15px;
+}
+
+/* Header */
+.factory-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.factory-header h1 {
+  color: #1b5e20;
+}
+
+.location-badge {
+  background: #2e7d32;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Info Card */
+.factory-info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  margin-bottom: 25px;
+}
+
+.factory-info-card h3 {
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+/* Limits */
+.limit-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.limit-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.limit-card h3 {
+  color: #1b5e20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.limit-values {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.limit-values h2 {
+  margin: 0;
+}
+
+.limit-values span {
+  font-size: 14px;
+  color: #555;
+}
+
+.status.safe {
+  color: green;
+  font-weight: 600;
+}
+
+/* Table */
+.emission-history {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  margin-bottom: 30px;
+}
+
+.emission-history h2 {
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+.emission-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.emission-history th,
+.emission-history td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.emission-history th {
+  background: #e8f5e9;
+  text-align: left;
+  color: #1b5e20;
+}
+
+.safe {
+  color: green;
+  font-weight: 600;
+}
+
+.danger {
+  color: red;
+  font-weight: 600;
+}
+
+/* Bottom cards */
+.bottom-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.fines-card,
+.compliance-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.fines-card h3,
+.compliance-card h3 {
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+.compliant-badge {
+  background: #2e7d32;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+}
+

@@ -1,0 +1,109 @@
+.factories-page {
+  padding: 30px 50px;
+  background: #f4f8f6;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.factories-page h1 {
+  color: #1b5e20;
+}
+
+.sub {
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* STATS */
+.factory-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.stat-card p {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.warning { border-left: 6px solid orange; }
+.danger { border-left: 6px solid red; }
+.info { border-left: 6px solid #1e88e5; }
+
+/* TABLE */
+.factory-table-box {
+  display: flex;
+  gap: 20px;
+}
+
+.factory-table {
+  width: 70%;
+  background: white;
+  border-collapse: collapse;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.factory-table th,
+.factory-table td {
+  padding: 12px;
+  text-align: left;
+}
+
+.factory-table th {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.safe {
+  color: green;
+  font-weight: bold;
+}
+
+.danger {
+  color: red;
+  font-weight: bold;
+}
+
+.factory-table button {
+  padding: 6px 14px;
+  border: none;
+  background: #1b5e20;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* RIGHT PANEL */
+.high-risk-box {
+  width: 30%;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.high-risk-box h3 {
+  color: #1b5e20;
+  margin-bottom: 10px;
+}
+
+.high-risk-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.high-risk-box li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
