@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 /* ===== MAIN ===== */
 import Main from "./pages/main";
@@ -30,8 +30,11 @@ import PeopleDashboard from "./pages/people/peopledashboard";
 function App() {
   return (
     <Routes>
-      {/* MAIN */}
+      {/* FORCE MAIN PAGE */}
       <Route path="/" element={<Main />} />
+
+      {/* ANY UNKNOWN ROUTE → MAIN */}
+      <Route path="*" element={<Navigate to="/" replace />} />
 
       {/* PEOPLE */}
       <Route path="/people" element={<PeopleHome />} />
@@ -39,11 +42,9 @@ function App() {
       <Route path="/people/register" element={<PeopleRegister />} />
       <Route path="/people/dashboard" element={<PeopleDashboard />} />
 
-      {/* FACTORY AUTH */}
+      {/* FACTORY */}
       <Route path="/factory/login" element={<Login />} />
       <Route path="/factory/register" element={<Register />} />
-
-      {/* FACTORY DASHBOARD */}
       <Route path="/factory" element={<FactoryLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="history" element={<History />} />

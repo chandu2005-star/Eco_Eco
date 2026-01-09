@@ -4,9 +4,23 @@ import "./peopleregister.css";
 function PeopleRegister() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/people/login");
+
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+
+    const res = await fetch("http://127.0.0.1:5000/public-register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (res.ok) {
+      navigate("/people/login");
+    } else {
+      alert("User already exists");
+    }
   };
 
   return (

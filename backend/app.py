@@ -3,15 +3,21 @@ from flask_cors import CORS
 from factories_data import factories
 from emissions_logic import calculate_allowed_limit, get_aqi_from_api
 from auth_routes import auth
+from emission_routes import emission_api
 
 app = Flask(__name__)
 CORS(app)
+
+# REGISTER BLUEPRINTS
 app.register_blueprint(auth)
+app.register_blueprint(emission_api)
 
 @app.route("/")
 def home():
     return jsonify({"status": "backend running"})
 
+
+# ================= MONTHLY REPORT (GOV) =================
 @app.route("/monthly-report", methods=["GET"])
 def monthly_report():
     city = "Delhi"
@@ -22,10 +28,7 @@ def monthly_report():
     for fid, data in factories.items():
         base_limit = data["base_limit"]
 
-        # FINAL CALCULATION
         final_allowed_limit = calculate_allowed_limit(base_limit, aqi)
-
-        # STORE BACK INTO DATABASE
         data["allowed_limit"] = final_allowed_limit
 
         latest_month = list(data["emissions"].keys())[-1]
@@ -44,6 +47,75 @@ def monthly_report():
         "aqi": aqi,
         "factories": report
     })
+
+
+# ================= PUBLIC REPORT (PEOPLE DASHBOARD) =================
+@app.route("/public-report/<city>", methods=["GET"])
+def public_report(city):
+    city = city.capitalize()
+    aqi = get_aqi_from_api(city)
+
+    result = []
+
+    for data in factories.values():
+        if data.get("city") != city:
+            continue
+
+        base_limit = data["base_limit"]
+        allowed_limit = calculate_allowed_limit(base_limit, aqi)
+
+        latest_month = list(data["emissions"].keys())[-1]
+        emission = data["emissions"][latest_month]
+
+        result.append({
+            "name": data["name"],
+            "emission": emission,
+            "allowed_limit": allowed_limit,
+            "status": "High" if emission > allowed_limit else "Moderate"
+        })
+
+    return jsonify({
+        "city": city,
+        "aqi": aqi,
+        "factories": result
+    })
+
+
+# ================= FACTORY HISTORY =================
+@app.route("/factory-history/<factory_id>", methods=["GET"])
+def factory_history(factory_id):
+    if factory_id not in factories:
+        return jsonify([])
+
+    factory = factories[factory_id]
+    history = []
+
+    allowed = factory["allowed_limit"] or 100
+
+    for month, emission in factory["emissions"].items():
+        history.append({
+            "month": month,
+            "emission": emission,
+            "allowed_limit": allowed,
+            "status": "EXCEEDED" if emission > allowed else "SAFE"
+        })
+
+    return jsonify(history)
+
+
+# ================= FACTORY FINE =================
+@app.route("/factory-fine/<factory_id>", methods=["GET"])
+def factory_fine(factory_id):
+    if factory_id not in factories:
+        return jsonify({"fine": 0})
+
+    factory = factories[factory_id]
+    allowed = factory["allowed_limit"] or 100
+    latest_emission = list(factory["emissions"].values())[-1]
+
+    fine = 500 if latest_emission > allowed else 0
+    return jsonify({"fine": fine})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

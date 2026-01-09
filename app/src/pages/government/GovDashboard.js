@@ -1,46 +1,77 @@
 import "./GovDashboard.css";
+
 import {
   FaIndustry,
   FaFileAlt,
   FaExclamationTriangle,
   FaChartLine
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function GovDashboard() {
   const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    total: 0,
+    exceeded: 0
+  });
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/monthly-report")
+      .then(res => res.json())
+      .then(data => {
+        const factories = Object.values(data.factories);
+        const exceeded = factories.filter(
+          f => f.status === "EXCEEDED"
+        ).length;
+
+        setStats({
+          total: factories.length,
+          exceeded
+        });
+      });
+  }, []);
 
   return (
     <div className="gov-page">
 
       {/* ================= NAVBAR ================= */}
       <nav className="gov-navbar">
-        <div className="logo">Eco‑Eco</div>
+
+        {/* LOGO — GUARANTEED NAVIGATION */}
+        <Link
+          to="/"
+          className="logo"
+          style={{ textDecoration: "none", cursor: "pointer" }}
+        >
+          Eco-Eco
+        </Link>
 
         <ul>
           <li onClick={() => navigate("/gov/dashboard")}>Dashboard</li>
           <li onClick={() => navigate("/gov/factories")}>Factories</li>
           <li onClick={() => navigate("/gov/reports")}>Reports</li>
           <li onClick={() => navigate("/gov/complaints")}>Complaints</li>
-          <li onClick={() => navigate("/gov/settings")}>Settings</li>
         </ul>
 
         <button
           className="logout-btn"
-          onClick={() => navigate("/gov/login")}
+          onClick={() => navigate("/", { replace: true })}
         >
           Logout
         </button>
       </nav>
 
-      {/* ================= HERO SECTION ================= */}
+      {/* ================= HERO ================= */}
       <section className="gov-hero">
         <div className="hero-text">
-          <h1>Government Portal for Monitoring and Controlling Factory Emissions</h1>
+          <h1>
+            Government Portal for Monitoring and Controlling Factory Emissions
+          </h1>
 
           <p>
             Enforce regulations, track pollution data, issue fines, and ensure
-            environmental safety with Eco‑Eco’s unified platform.
+            environmental safety with Eco-Eco’s unified platform.
           </p>
 
           <div className="hero-buttons">
@@ -63,46 +94,43 @@ export default function GovDashboard() {
 
       {/* ================= FEATURES ================= */}
       <section className="features">
-
         <div className="feature-card">
           <FaChartLine className="feature-icon" />
           <h3>Monitor Emissions</h3>
-          <p>Track real‑time pollution levels from registered factories.</p>
-          <button onClick={() => navigate("/gov/dashboard")}>
-            Learn More
-          </button>
+          <p>Track real-time pollution levels from registered factories.</p>
         </div>
 
         <div className="feature-card">
           <FaExclamationTriangle className="feature-icon" />
           <h3>Issue Fines & Warnings</h3>
-          <p>Enforce regulations by issuing fines to non‑compliant factories.</p>
-          <button onClick={() => navigate("/gov/factories")}>
-            Learn More
-          </button>
+          <p>Factories exceeding limits are automatically flagged.</p>
         </div>
 
         <div className="feature-card">
           <FaFileAlt className="feature-icon" />
           <h3>Generate Reports</h3>
-          <p>Analyze and download detailed compliance reports.</p>
-          <button onClick={() => navigate("/gov/reports")}>
-            Learn More
-          </button>
+          <p>Analyze compliance reports from live factory data.</p>
         </div>
-
       </section>
 
       {/* ================= OVERVIEW ================= */}
       <section className="overview">
         <h2>Factory Emissions Overview</h2>
-        <p>Explore reports and monitor factory emissions at a glance.</p>
+        <p>Live backend-driven statistics</p>
 
         <div className="overview-card">
           <FaIndustry className="overview-icon" />
           <div>
             <h3>Registered Factories</h3>
-            <p>128 Active Factories</p>
+            <p>{stats.total} Active Factories</p>
+          </div>
+        </div>
+
+        <div className="overview-card danger">
+          <FaExclamationTriangle className="overview-icon" />
+          <div>
+            <h3>Violations</h3>
+            <p>{stats.exceeded} Factories Exceeded Limits</p>
           </div>
         </div>
       </section>

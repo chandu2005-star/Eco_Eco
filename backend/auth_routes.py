@@ -1,7 +1,6 @@
-# backend/auth_routes.py
-
 from flask import Blueprint, request, jsonify
-from Login_credentials import users   # CHANGED IMPORT
+from Login_credentials import users
+
 
 auth = Blueprint("auth", __name__)
 
@@ -21,3 +20,17 @@ def login():
         return jsonify({"status": "success"}), 200
 
     return jsonify({"status": "failed"}), 401
+
+
+# ✅ PUBLIC REGISTER (USES SAME users DICT)
+@auth.route("/public-register", methods=["POST"])
+def public_register():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    if email in users["public"]:
+        return jsonify({"status": "exists"}), 409
+
+    users["public"][email] = password
+    return jsonify({"status": "registered"}), 200

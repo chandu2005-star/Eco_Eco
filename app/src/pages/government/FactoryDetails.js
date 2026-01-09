@@ -1,158 +1,132 @@
 import "./FactoryDetails.css";
-import { FaCloud, FaTint, FaCheckCircle, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaCloud,
+  FaTint,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaMapMarkerAlt
+} from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export default function FactoryDetails() {
+  const { state } = useLocation();
+  const [factory, setFactory] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [fine, setFine] = useState(0);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/monthly-report")
+      .then(res => res.json())
+      .then(data => {
+        setFactory(data.factories[state.factoryId]);
+      });
+
+    fetch(`http://127.0.0.1:5000/factory-history/${state.factoryId}`)
+      .then(res => res.json())
+      .then(setHistory);
+
+    fetch(`http://127.0.0.1:5000/factory-fine/${state.factoryId}`)
+      .then(res => res.json())
+      .then(data => setFine(data.fine));
+  }, [state.factoryId]);
+
+  if (!factory) return <h2>Loading...</h2>;
+
   return (
     <div className="factory-details-page">
 
-      {/* BREADCRUMB */}
-      <div className="breadcrumb">
-        Dashboard &gt; Factories &gt; <b>GreenTech Manufacturing</b>
-      </div>
-
       {/* HEADER */}
       <div className="factory-header">
-        <h1>GreenTech Manufacturing</h1>
+        <h1>{factory.name}</h1>
         <span className="location-badge">
-          <FaMapMarkerAlt /> Chicago, IL
+          <FaMapMarkerAlt /> Delhi
         </span>
       </div>
 
       {/* FACTORY INFO */}
       <div className="factory-info-card">
         <h3>Factory Details</h3>
-        <p><b>Factory Name:</b> GreenTech Manufacturing</p>
-        <p><b>Industry:</b> Electronics</p>
-        <p><b>Location:</b> Chicago, IL</p>
+        <p><b>Month:</b> {factory.month}</p>
+        <p><b>Emission:</b> {factory.emission}</p>
+        <p><b>Allowed Limit:</b> {factory.allowed_limit}</p>
       </div>
 
       {/* LIMIT CARDS */}
       <div className="limit-cards">
 
-        {/* AIR */}
         <div className="limit-card">
-          <h3><FaCloud /> Air Limit</h3>
+          <h3><FaCloud /> Air Emission</h3>
           <div className="limit-values">
             <div>
-              <h2>100 <span>tons / month</span></h2>
-              <p>Limit</p>
+              <h2>{factory.allowed_limit}</h2>
+              <p>Allowed</p>
             </div>
             <div>
-              <h2>85 <span>tons</span></h2>
-              <p>Current Usage</p>
+              <h2>{factory.emission}</h2>
+              <p>Current</p>
             </div>
           </div>
-          <p className="status safe"><FaCheckCircle /> Status: Safe</p>
+
+          <p className={`status ${factory.status === "EXCEEDED" ? "danger" : "safe"}`}>
+            {factory.status === "EXCEEDED"
+              ? <><FaExclamationTriangle /> Status: Exceeded</>
+              : <><FaCheckCircle /> Status: Safe</>}
+          </p>
         </div>
 
-        {/* WATER */}
         <div className="limit-card">
-          <h3><FaTint /> Water Limit</h3>
+          <h3><FaTint /> Water Emission</h3>
           <div className="limit-values">
             <div>
-              <h2>50,000 <span>gallons / month</span></h2>
-              <p>Limit</p>
+              <h2>50000</h2>
+              <p>Allowed</p>
             </div>
             <div>
-              <h2>42,000 <span>gallons</span></h2>
-              <p>Current Usage</p>
+              <h2>42000</h2>
+              <p>Current</p>
             </div>
           </div>
-          <p className="status safe"><FaCheckCircle /> Status: Safe</p>
+          <p className="status safe">
+            <FaCheckCircle /> Status: Safe
+          </p>
         </div>
 
       </div>
 
-      {/* EMISSION HISTORY */}
+      {/* HISTORY TABLE */}
       <div className="emission-history">
         <h2>Emission History</h2>
 
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Air Used</th>
-              <th>Air Limit</th>
-              <th>Water Used</th>
-              <th>Water Limit</th>
+              <th>Month</th>
+              <th>Emission</th>
+              <th>Allowed Limit</th>
               <th>Status</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td>15/01/2022</td>
-              <td>90 tons</td>
-              <td>100 tons</td>
-              <td>48,000 gal</td>
-              <td>50,000 gal</td>
-              <td className="danger">Exceeded</td>
-            </tr>
-
-            <tr>
-              <td>05/01/2022</td>
-              <td>80 tons</td>
-              <td>100 tons</td>
-              <td>40,000 gal</td>
-              <td>50,000 gal</td>
-              <td className="safe">Safe</td>
-            </tr>
-
-            <tr>
-              <td>20/12/2021</td>
-              <td>95 tons</td>
-              <td>100 tons</td>
-              <td>52,000 gal</td>
-              <td>50,000 gal</td>
-              <td className="danger">Exceeded</td>
-            </tr>
-
-            <tr>
-              <td>10/12/2021</td>
-              <td>70 tons</td>
-              <td>100 tons</td>
-              <td>38,000 gal</td>
-              <td>50,000 gal</td>
-              <td className="safe">Safe</td>
-            </tr>
-
-            <tr>
-              <td>25/11/2021</td>
-              <td>85 tons</td>
-              <td>100 tons</td>
-              <td>45,000 gal</td>
-              <td>50,000 gal</td>
-              <td className="safe">Safe</td>
-            </tr>
-
-            <tr>
-              <td>10/11/2021</td>
-              <td>78 tons</td>
-              <td>100 tons</td>
-              <td>42,500 gal</td>
-              <td>50,000 gal</td>
-              <td className="safe">Safe</td>
-            </tr>
+            {history.map((h, i) => (
+              <tr key={i}>
+                <td>{h.month}</td>
+                <td>{h.emission}</td>
+                <td>{h.allowed_limit}</td>
+                <td className={h.status === "EXCEEDED" ? "danger" : "safe"}>
+                  {h.status}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
 
-      {/* BOTTOM CARDS */}
-      <div className="bottom-cards">
-
-        <div className="fines-card">
-          <h3>Fines Summary</h3>
-          <p>Total Fines: <b>$12,000</b></p>
-          <p>Paid Fines: <b>$12,000</b></p>
-        </div>
-
-        <div className="compliance-card">
-          <h3>Compliance Status</h3>
-          <div className="compliant-badge">
-            <FaCheckCircle /> Compliant
-          </div>
-        </div>
-
+      {/* FINES */}
+      <div className="fines-card">
+        <h3>Fine</h3>
+        <p><b>₹{fine}</b></p>
       </div>
 
     </div>

@@ -1,118 +1,219 @@
-import { useState } from "react";
 import "./peopledashboard.css";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+} from "chart.js";
 
-function PeopleDashboard() {
-  const data = {
-    Hyderabad: {
-      "ABC Chemicals": {
-        airLimit: 100,
-        airUsed: 120,
-        waterLimit: 80,
-        waterUsed: 90,
-      },
-      "Green Cement": {
-        airLimit: 100,
-        airUsed: 70,
-        waterLimit: 80,
-        waterUsed: 60,
-      },
-    },
-    Delhi: {
-      "Metro Steel": {
-        airLimit: 100,
-        airUsed: 140,
-        waterLimit: 80,
-        waterUsed: 85,
-      },
-    },
-  };
+import { FaWind, FaWater, FaVolumeUp } from "react-icons/fa";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useState, useRef } from "react";
 
-  const [city, setCity] = useState("");
-  const [factory, setFactory] = useState("");
-  const [complaint, setComplaint] = useState("");
+/* Leaflet marker fix */
+import L from "leaflet";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-  const submitComplaint = () => {
-    alert("Complaint sent to Government");
-    setComplaint("");
-  };
+const DefaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34]
+});
+L.Marker.prototype.options.icon = DefaultIcon;
 
-  const getStatus = (f) => {
-    if (f.airUsed > f.airLimit || f.waterUsed > f.waterLimit)
-      return "LIMIT EXCEEDED";
-    return "SAFE";
-  };
+/* Chart register */
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Legend
+);
+
+const CITY_COORDS = {
+  Delhi: [28.6139, 77.2090],
+  Mumbai: [19.0760, 72.8777],
+  Hyderabad: [17.3850, 78.4867]
+};
+
+/* 🔒 Map controller — FACTORY ONLY */
+function FactoryMapController({ factoryCenter }) {
+  const map = useMap();
+  const hasMovedRef = useRef(false);
+
+  useEffect(() => {
+    if (!factoryCenter) return;
+
+    // 🔒 ONLY move map on explicit factory selection
+    map.flyTo(factoryCenter, 12, { animate: true, duration: 1 });
+    hasMovedRef.current = true;
+  }, [factoryCenter, map]);
+
+  return null;
+}
+
+export default function PeopleDashboard() {
+  const [cities] = useState(["Delhi", "Mumbai", "Hyderabad"]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [factories, setFactories] = useState([]);
+  const [selectedFactory, setSelectedFactory] = useState("");
+
+  const [aqi, setAqi] = useState(null);
+  const [chartData, setChartData] = useState(null);
+
+  /* 🔴 THIS is the ONLY map trigger */
+  const [factoryCenter, setFactoryCenter] = useState(null);
+
+  /* CITY CHANGE → DATA ONLY (MAP IS TOUCHED ZERO TIMES) */
+  useEffect(() => {
+    if (!selectedCity) {
+      setFactories([]);
+      setSelectedFactory("");
+      setAqi(null);
+      setChartData(null);
+      return;
+    }
+
+    fetch(`http://127.0.0.1:5000/public-report/${selectedCity}`)
+      .then(res => res.json())
+      .then(data => {
+        setFactories(data.factories || []);
+        setSelectedFactory("");
+        setAqi(null);
+        setChartData(null);
+        // ❌ NO map logic here
+      });
+  }, [selectedCity]);
+
+  /* FACTORY CHANGE → AQI + CHART + MAP */
+  useEffect(() => {
+    if (!selectedFactory) return;
+
+    const factory = factories.find(f => f.name === selectedFactory);
+    if (!factory) return;
+
+    setAqi(factory.aqi ?? 100);
+    setFactoryCenter(CITY_COORDS[selectedCity]); // ✅ ONLY HERE
+
+    const base = factory.emission;
+    const months = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
+
+    setChartData({
+      labels: months,
+      datasets: [
+        {
+          label: "CO₂",
+          data: months.map((_, i) => base * 0.6 * (1 + i * 0.04)),
+          borderColor: "#1976d2",
+          tension: 0.45,
+          pointRadius: 0,
+          borderWidth: 3
+        },
+        {
+          label: "PM2.5",
+          data: months.map((_, i) => base * 0.25 * (1 - i * 0.03)),
+          borderColor: "#43a047",
+          tension: 0.4,
+          pointRadius: 0,
+          borderWidth: 3
+        },
+        {
+          label: "NOx",
+          data: months.map((_, i) => base * 0.15 * (1 + (i % 2) * 0.05)),
+          borderColor: "#fb8c00",
+          tension: 0.35,
+          pointRadius: 0,
+          borderWidth: 3
+        }
+      ]
+    });
+  }, [selectedFactory, factories, selectedCity]);
 
   return (
-    <div className="people-bg">
-      <h1>Public Pollution Dashboard</h1>
+    <div className="people-dashboard">
 
-      <div className="selectors">
-        <select
-          onChange={(e) => {
-            setCity(e.target.value);
-            setFactory("");
-          }}
-        >
-          <option value="">Select City</option>
-          {Object.keys(data).map((c) => (
-            <option key={c}>{c}</option>
-          ))}
-        </select>
+      <div className="dashboard-header">
+        <h1>Public Pollution Dashboard</h1>
 
-        <select
-          disabled={!city}
-          onChange={(e) => setFactory(e.target.value)}
-        >
-          <option value="">Select Factory</option>
-          {city &&
-            Object.keys(data[city]).map((f) => (
-              <option key={f}>{f}</option>
+        <div className="filters">
+          <select value={selectedCity} onChange={e => setSelectedCity(e.target.value)}>
+            <option value="">Select City</option>
+            {cities.map(c => (
+              <option key={c} value={c}>{c}</option>
             ))}
-        </select>
+          </select>
+
+          <select
+            value={selectedFactory}
+            onChange={e => setSelectedFactory(e.target.value)}
+            disabled={!selectedCity}
+          >
+            <option value="">Select Factory</option>
+            {factories.map(f => (
+              <option key={f.name} value={f.name}>{f.name}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {city && factory && (
-        <>
-          <div className="cards">
-            <div className="card red">
-              Air Limit<b>{data[city][factory].airLimit}</b>
-            </div>
+      <div className="metric-cards">
+        <div className="metric-card air-border">
+          <FaWind />
+          <h3>AQI</h3>
+          <p>{aqi ?? "--"}</p>
+        </div>
 
-            <div className="card pink">
-              Air Emitted<b>{data[city][factory].airUsed}</b>
-            </div>
+        <div className="metric-card water-border">
+          <FaWater />
+          <h3>Water Quality</h3>
+          <p>{aqi ? Math.max(40, 100 - aqi / 2) : "--"}</p>
+        </div>
 
-            <div className="card red">
-              Water Limit<b>{data[city][factory].waterLimit}</b>
-            </div>
+        <div className="metric-card noise-border">
+          <FaVolumeUp />
+          <h3>Noise Level</h3>
+          <p>{aqi ? `${50 + aqi / 2} dB` : "--"}</p>
+        </div>
+      </div>
 
-            <div className="card pink">
-              Water Used<b>{data[city][factory].waterUsed}</b>
-            </div>
+      <div className="main-section">
+        <div className="chart-box" style={{ height: "300px" }}>
+          <h3>Emission Trends</h3>
+          {chartData ? <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} /> : "Select a factory"}
+        </div>
 
-            <div
-              className={`card status ${getStatus(
-                data[city][factory]
-              )
-                .toLowerCase()
-                .replace(" ", "-")}`}
-            >
-              Status<b>{getStatus(data[city][factory])}</b>
-            </div>
-          </div>
+        <div className="map-box">
+          <MapContainer
+            center={[20.5937, 78.9629]}   // 🔒 CONSTANT FOREVER
+            zoom={5}
+            className="map"
+          >
+            <FactoryMapController factoryCenter={factoryCenter} />
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-          <div className="complaint-box">
-            <textarea
-              placeholder="Write your official complaint (only Government can see this)..."
-              value={complaint}
-              onChange={(e) => setComplaint(e.target.value)}
-            />
-            <button onClick={submitComplaint}>Submit Complaint</button>
-          </div>
-        </>
-      )}
+            {factoryCenter && (
+              <Marker position={factoryCenter}>
+                <Popup>📍</Popup>
+              </Marker>
+            )}
+          </MapContainer>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default PeopleDashboard;

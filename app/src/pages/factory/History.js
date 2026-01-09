@@ -1,10 +1,24 @@
+import { useEffect, useState } from "react";
 import "./History.css";
 
 export default function History() {
-  const data = [
-    { date: "Yesterday", air: 95, water: 70, status: "SAFE" },
-    { date: "2 Days Ago", air: 120, water: 90, status: "EXCEEDED" }
-  ];
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/monthly-report")
+      .then(res => res.json())
+      .then(result => {
+        const factory = Object.values(result.factories)[0];
+        setRows([
+          {
+            date: factory.month,
+            air: factory.emission,
+            limit: factory.allowed_limit,
+            status: factory.status
+          }
+        ]);
+      });
+  }, []);
 
   return (
     <>
@@ -13,20 +27,20 @@ export default function History() {
       <table>
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Air</th>
-            <th>Water</th>
+            <th>Month</th>
+            <th>Emission</th>
+            <th>Allowed</th>
             <th>Status</th>
           </tr>
         </thead>
 
         <tbody>
-          {data.map((d,i) => (
+          {rows.map((d, i) => (
             <tr key={i}>
               <td>{d.date}</td>
               <td>{d.air}</td>
-              <td>{d.water}</td>
-              <td className={d.status === "SAFE" ? "safe" : "danger"}>
+              <td>{d.limit}</td>
+              <td className={d.status === "OK" ? "safe" : "danger"}>
                 {d.status}
               </td>
             </tr>
