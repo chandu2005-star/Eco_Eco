@@ -58,8 +58,6 @@ function FactoryMapController({ factoryCenter }) {
 
   useEffect(() => {
     if (!factoryCenter) return;
-
-    // 🔒 ONLY move map on explicit factory selection
     map.flyTo(factoryCenter, 12, { animate: true, duration: 1 });
     hasMovedRef.current = true;
   }, [factoryCenter, map]);
@@ -76,10 +74,10 @@ export default function PeopleDashboard() {
   const [aqi, setAqi] = useState(null);
   const [chartData, setChartData] = useState(null);
 
-  /* 🔴 THIS is the ONLY map trigger */
+  /* 🔴 ONLY map trigger */
   const [factoryCenter, setFactoryCenter] = useState(null);
 
-  /* CITY CHANGE → DATA ONLY (MAP IS TOUCHED ZERO TIMES) */
+  /* CITY CHANGE → DATA ONLY */
   useEffect(() => {
     if (!selectedCity) {
       setFactories([]);
@@ -96,7 +94,6 @@ export default function PeopleDashboard() {
         setSelectedFactory("");
         setAqi(null);
         setChartData(null);
-        // ❌ NO map logic here
       });
   }, [selectedCity]);
 
@@ -108,7 +105,7 @@ export default function PeopleDashboard() {
     if (!factory) return;
 
     setAqi(factory.aqi ?? 100);
-    setFactoryCenter(CITY_COORDS[selectedCity]); // ✅ ONLY HERE
+    setFactoryCenter(CITY_COORDS[selectedCity]);
 
     const base = factory.emission;
     const months = ["Aug", "Sep", "Oct", "Nov", "Dec", "Jan"];
@@ -144,9 +141,12 @@ export default function PeopleDashboard() {
     });
   }, [selectedFactory, factories, selectedCity]);
 
+  const factoryData = factories.find(f => f.name === selectedFactory);
+
   return (
     <div className="people-dashboard">
 
+      {/* HEADER */}
       <div className="dashboard-header">
         <h1>Public Pollution Dashboard</h1>
 
@@ -171,6 +171,7 @@ export default function PeopleDashboard() {
         </div>
       </div>
 
+      {/* METRICS */}
       <div className="metric-cards">
         <div className="metric-card air-border">
           <FaWind />
@@ -191,18 +192,17 @@ export default function PeopleDashboard() {
         </div>
       </div>
 
+      {/* CHART + MAP */}
       <div className="main-section">
         <div className="chart-box" style={{ height: "300px" }}>
           <h3>Emission Trends</h3>
-          {chartData ? <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} /> : "Select a factory"}
+          {chartData
+            ? <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+            : "Select a factory"}
         </div>
 
         <div className="map-box">
-          <MapContainer
-            center={[20.5937, 78.9629]}   // 🔒 CONSTANT FOREVER
-            zoom={5}
-            className="map"
-          >
+          <MapContainer center={[20.5937, 78.9629]} zoom={5} className="map">
             <FactoryMapController factoryCenter={factoryCenter} />
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
@@ -214,6 +214,35 @@ export default function PeopleDashboard() {
           </MapContainer>
         </div>
       </div>
+
+      {/* 🔥 TABLE (RESTORED) */}
+      <div className="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Factory</th>
+              <th>Emission</th>
+              <th>Allowed Limit</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {factoryData ? (
+              <tr>
+                <td>{factoryData.name}</td>
+                <td>{factoryData.emission}</td>
+                <td>{factoryData.allowed_limit}</td>
+                <td>{factoryData.status}</td>
+              </tr>
+            ) : (
+              <tr>
+                <td colSpan="4">Select a factory</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
     </div>
   );
 }

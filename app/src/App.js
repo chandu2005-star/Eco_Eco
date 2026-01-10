@@ -30,11 +30,8 @@ import PeopleDashboard from "./pages/people/peopledashboard";
 function App() {
   return (
     <Routes>
-      {/* FORCE MAIN PAGE */}
+      {/* MAIN */}
       <Route path="/" element={<Main />} />
-
-      {/* ANY UNKNOWN ROUTE → MAIN */}
-      <Route path="*" element={<Navigate to="/" replace />} />
 
       {/* PEOPLE */}
       <Route path="/people" element={<PeopleHome />} />
@@ -45,6 +42,7 @@ function App() {
       {/* FACTORY */}
       <Route path="/factory/login" element={<Login />} />
       <Route path="/factory/register" element={<Register />} />
+
       <Route path="/factory" element={<FactoryLayout />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="history" element={<History />} />
@@ -60,6 +58,9 @@ function App() {
       <Route path="/gov/factory-details" element={<FactoryDetails />} />
       <Route path="/gov/reports" element={<Reports />} />
       <Route path="/gov/complaints" element={<Complaints />} />
+
+      {/* FALLBACK */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

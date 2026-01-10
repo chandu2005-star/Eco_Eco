@@ -1,64 +1,49 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Dashboard.css";
+import "./SubmitEmission.css";
 
-export default function Dashboard() {
-  const [data, setData] = useState(null);
+function SubmitEmission() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/monthly-report")
-      .then(res => res.json())
-      .then(result => {
-        const firstFactory = Object.values(result.factories)[0];
-        setData(firstFactory);
-      });
-  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  if (!data) return <h2>Loading...</h2>;
+    // later we’ll add real logic
+    alert("Emission data submitted successfully");
 
-  const fine = data.status === "EXCEEDED" ? 500 : 0;
+    // ✅ CORRECT PATH
+    navigate("/factory/dashboard");
+  };
 
   return (
-    <>
-      <h1>Today’s Emission Status</h1>
+    <div className="submit">
+      <h2>Submit Emission Data</h2>
 
-      <div className="cards">
-        <div className="card air">
-          Air Emission
-          <b>{data.emission}</b>
-        </div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" placeholder="Chemical Name" required />
 
-        <div className="card water">
-          Allowed Limit
-          <b>{data.allowed_limit}</b>
-        </div>
+        <select required>
+          <option value="">Select Emission Type</option>
+          <option>Air</option>
+          <option>Water</option>
+        </select>
 
-        <div className="card status">
-          Status
-          <b>{data.status}</b>
-        </div>
+        <input
+          type="number"
+          placeholder="Quantity Released (units)"
+          required
+        />
 
-        <div className="card fine">
-          Today Fine
-          <b>₹{fine}</b>
-        </div>
+        <button type="submit">Submit</button>
+      </form>
 
-        {/* SUBMIT EMISSION BUTTON AS CARD */}
-        <div className="card submit">
-          <button
-            onClick={() => navigate("/factory/submit")}
-            style={{
-              padding: "12px",
-              fontSize: "16px",
-              cursor: "pointer",
-              width: "100%"
-            }}
-          >
-            ➕ Submit Emission
-          </button>
-        </div>
-      </div>
-    </>
+      <button
+        className="back-btn"
+        onClick={() => navigate("/factory/dashboard")}
+      >
+        ← Back to Dashboard
+      </button>
+    </div>
   );
 }
+
+export default SubmitEmission;
