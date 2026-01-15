@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from factories_data import factories
 from Login_credentials import users
-import uuid
 
 auth = Blueprint("auth", __name__)
 
@@ -29,7 +28,7 @@ def factory_login():
     }), 200
 
 
-# ================= GOV + PUBLIC LOGIN (FIXED) =================
+# ================= GOV + PUBLIC LOGIN =================
 @auth.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -38,21 +37,15 @@ def login():
     username = data.get("username")
     password = data.get("password")
 
-    # 🔧 ROLE NORMALIZATION
-    if role == "gov":
-        role = "government"
-
     if (
         role in users and
         username in users[role] and
         users[role][username] == password
     ):
-        token = f"{role}-{uuid.uuid4()}"  # ✅ SIMPLE TOKEN
-
+        # ✅ FIX: SEND TOKEN (frontend expects this)
         return jsonify({
             "status": "success",
-            "token": token,
-            "role": role
+            "token": f"{role}_{username}_token"
         }), 200
 
     return jsonify({"status": "failed"}), 401
